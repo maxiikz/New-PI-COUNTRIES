@@ -1,0 +1,63 @@
+const axios =require ("axios")
+const { Op } = require("sequelize")
+const {Country, Activity} = require ("../db")
+
+const countryApi = async ()=>{
+    const apiurl = await axios.get("https://restcountries.com/v3/all")
+    const todospaises = await apiurl.data.map(e => {
+        return {
+            name:e.name.official,
+            id: e.cca3,
+            region: e.region,
+            flag:e.flags[1],
+            capital:e.capital?e.capital.join(", "):"no tiene",
+            subregion: e.subregion,
+            area:e.area,
+            population:e.population
+
+        }
+
+
+
+    })
+    return todospaises;
+}
+const savesCountry = async (req, res) =>{
+    let info = await countryApi () 
+    let {name} = req.query;
+    try {
+       let full = await Country.findAll({
+           include:{model: Activity}
+       })
+       if (!full.length){
+           await Country.bulkCreate(info) 
+        
+        }
+        if(name){
+            let countryName = await Country.findAll({
+                where:{name:{[
+                    Op.iLike //Me trae todos los que coinciden con Query
+                 ]:`%${name.toLowerCase()}%`}}
+             })
+             countryName.length?res.status(200).json(countryName):res.status(404).send("no está :(")
+         }else{
+             let full = await Country.findAll({
+                 include:{model: Activity}
+             }) 
+             res.status(200).json(full)
+         }
+    } catch (err){
+        console.log (err);
+    }
+}
+
+const GetCountryId = async (req,res)=> {
+    let {id} = req.params;
+    let pais = await Country.findByPk(id,{includes:{model:Activity}});
+    if(pais){
+        return res.status(200).json(pais)
+    }else{
+        res.status(404).send("no está :(")
+    }
+}
+module.exports={GetCountryId, savesCountry}
