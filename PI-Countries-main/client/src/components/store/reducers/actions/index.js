@@ -8,6 +8,7 @@ export function getCountries(){
         })
     }
 }
+// [GET_C ; GET_ACT;GET_DETAIL;POST_ACT;BAR_SEARCH;FILTER_ACTIVITY;FILTER_REG;SORT_POP;SORT_NAME]
 export function getActivities(){
     return function (dispatch){
         axios.get("http://localhost:3001/activity").then(res=>{

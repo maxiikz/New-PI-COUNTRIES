@@ -51,13 +51,13 @@ const savesCountry = async (req, res) =>{
     }
 }
 
-const GetCountryId = async (req,res)=> {
+const getCountryId = async (req,res)=> {
     let {id} = req.params;
-    let pais = await Country.findByPk(id,{includes:{model:Activity}});
+    let pais = await Country.findByPk(id,{includes:{model:Activity}});e3
     if(pais){
         return res.status(200).json(pais)
     }else{
         res.status(404).send("no está :(")
     }
 }
-module.exports={GetCountryId, savesCountry}
+module.exports={getCountryId, savesCountry}

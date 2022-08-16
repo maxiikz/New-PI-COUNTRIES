@@ -1,4 +1,4 @@
-const {GetCountryId, savesCountry} = require('../controllers/controller.countries')
+const {getCountryId, savesCountry} = require('../controllers/controller.countries')
 
 
 const { Router } = require('express');
@@ -11,7 +11,7 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 router.get('/countries', savesCountry)
-router.get('/countries/:id', GetCountryId)
+router.get('/countries/:id', getCountryId)
 
 
 module.exports = router;
